@@ -7,7 +7,7 @@ Out_3 = 3
 Out_5 = 5
 Out_7 = 7
 PULSE_REST_URL = 'http://inbanshetev:8091/delegate/'
-
+GPIO.setwarnings(False)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(INPUT_PIN,GPIO.IN)
@@ -18,21 +18,22 @@ GPIO.setup(Out_7, GPIO.OUT)
 t1=0
 t2=0
 count_beats=0
+interval = 15
 
 def inputLow(channel):
     global t1
     global t2
     global count_beats
-    
+    global interval
     if GPIO.input(INPUT_PIN):
         GPIO.output(Out_7,True)
         #print('0') 
         count_beats = count_beats+1
-        if count_beats%5 == 0:
+        if count_beats%interval == 0:
             t2=time.time()
             print("Beats Per Min: ")
             #print(t2-t1)
-	    pulse = 300/(t2-t1)
+            pulse = (interval*60)/(t2-t1)
             pulse_data = {
                             'device':'PULSE01',
                             'data' : pulse
@@ -40,7 +41,7 @@ def inputLow(channel):
                         }
             
             print(pulse_data)
-	    if pulse > 73.0 :
+            if pulse > 73.0 :
                 GPIO.output(Out_3,True)
             else:
                 GPIO.output(Out_3,False)
