@@ -18,7 +18,7 @@ GPIO.setup(Out_7, GPIO.OUT)
 t1=0
 t2=0
 count_beats=0
-interval = 15
+interval = 5
 
 def inputLow(channel):
     global t1
