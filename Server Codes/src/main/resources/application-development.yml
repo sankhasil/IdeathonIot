@@ -1,0 +1,17 @@
+server:
+  port: 8091
+  contextPath: /delegate
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: NH_LOCAL_GLBL_DEVICECORE_1
+    password: NH_LOCAL_GLBL_DEVICECORE_1
+    driver-class-name: oracle.jdbc.OracleDriver
+
+logging:
+  level:
+    org.springframework.web.servlet.mvc.method: DEBUG
+    org.springframework.web: ERROR
+    com.baxter: DEBUG
+  file: logs/NH-PMA-PACRestService-Service.log
