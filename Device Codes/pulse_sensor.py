@@ -32,13 +32,18 @@ def inputLow(channel):
             t2=time.time()
             print("Beats Per Min: ")
             #print(t2-t1)
+	    pulse = 300/(t2-t1)
             pulse_data = {
                             'device':'PULSE01',
-                            'data' : 300/(t2-t1)
+                            'data' : pulse
                             
                         }
             
             print(pulse_data)
+	    if pulse > 73.0 :
+                GPIO.output(Out_3,True)
+            else:
+                GPIO.output(Out_3,False)
             try:
                 response = requests.post(PULSE_REST_URL+'pulse', json=pulse_data)
                 print('Response From Pulse Server')
