@@ -1,15 +1,33 @@
 package com.baxter.renal.nh.pulse.service.dto;
 
 public class Pulse {
-	String device;
-	double data;
+	private String device;
+	private String patientActivationCode;
+	private String pulsePrePost;
+	private double data;
 	
+	public String getPatientActivationCode() {
+		return patientActivationCode;
+	}
+	public void setPatientActivationCode(String patientActivationCode) {
+		this.patientActivationCode = patientActivationCode;
+	}
+	public String getPulsePrePost() {
+		return pulsePrePost;
+	}
+	public void setPulsePrePost(String pulsePrePost) {
+		this.pulsePrePost = pulsePrePost;
+	}
 	public Pulse() {
 		super();
 	}
-	public Pulse(String device, double data) {
+	
+	public Pulse(String device, String patientActivationCode,
+			String pulsePrePost, double data) {
 		super();
 		this.device = device;
+		this.patientActivationCode = patientActivationCode;
+		this.pulsePrePost = pulsePrePost;
 		this.data = data;
 	}
 	public String getDevice() {
@@ -26,7 +44,7 @@ public class Pulse {
 	}
 	@Override
     public String toString() {
-        return String.format("\n\nDevice: " + this.device + "\nData: " + this.data);
+        return String.format("\nDevice: " + this.device + "\npatientActivationCode: "+this.patientActivationCode +"\npulsePrePost: "+this.pulsePrePost+"\nData: " + this.data);
     }
 	
 }

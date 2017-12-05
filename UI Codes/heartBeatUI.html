@@ -28,17 +28,19 @@ var dataLength = 50; // number of dataPoints visible at any point
 var updateChart = function (count) {
 	// count is number of times loop runs to generate random dataPoints.
 		$.ajax({
-			   url: 'http://inbanshetev:8091/delegate/pulse',
+			   url: 'http://INBANSHETEV:8091/delegate/pulse',
 			   error: function(errors) {
 			      $('#info').html('<p><b>An error has occurred</b></p>');
 			   },
 			   dataType: 'text',
 			   success: function(data) {
 			 	console.log(data);
+				if(Math.round(data)>50 && Math.round(data)<150){
 				dps.push({
 							x: xVal,
 							y: Math.round(data)
 						});
+				}
 
 			   },
 			   type: 'GET'

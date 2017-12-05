@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.baxter.renal.nh.pulse.service.constants.ControllerMessageConstants;
-import com.baxter.renal.nh.pulse.service.dao.PACLookupRepository;
-import com.baxter.renal.nh.pulse.service.dto.PACLookup;
+import com.baxter.renal.nh.pulse.service.dao.PulseRepository;
+import com.baxter.renal.nh.pulse.service.dto.Pulse;
 import com.baxter.renal.nh.pulse.service.exception.InvalidRequestException;
 
 /**
@@ -28,7 +28,7 @@ public class PulseService {
 	 * PACLookupRepository object autowired constructor
 	 */
 	@Autowired
-	private PACLookupRepository pacLookupRepository;
+	private PulseRepository pulseRepository;
 	
 	/**
 	 * Given a PAC, calls repository and retrieves info
@@ -36,11 +36,13 @@ public class PulseService {
 	 * @return PACLookup object containing pac, patientId and regionCode
 	 * @throws InvalidRequestException - If request is not valid
 	 */
-	public PACLookup getPacInfo(String pac){
-		
-		if(StringUtils.isEmpty(pac)){
+
+	public void storePulse(Pulse pulse) {
+		if(StringUtils.isEmpty(pulse.getDevice())){
 			throw new InvalidRequestException(ControllerMessageConstants.ERROR_INVALID_REQUEST);
 		}
-		return pacLookupRepository.getPacInfo(pac);
+		
+		pulseRepository.storePulse(pulse);
 	}
+		
 }

@@ -21,9 +21,10 @@ public final class ControllerMessageConstants {
 		/**
 		 * Controller Messages (static final)
 		 */
-		public static final String ERROR_PAC_NOT_FOUND = "Patient Activation Code doesn\'t exist or duplicate entry for pac ";
 
 		public static final String ERROR_DATA_ACCESS = "Data access error for Patient Activation Code ";
 
 		public static final String ERROR_INVALID_REQUEST = "Invalid request, check parameters or token payload.";
+
+		public static final String ERROR_PULSE_NOT_STORED = "Pulse not stored in database";
 }

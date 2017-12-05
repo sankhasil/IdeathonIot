@@ -6,6 +6,8 @@
  * Copyright Â© 2017 Baxter Healthcare Corporation. All rights reserved.
  */
 package com.baxter.renal.nh.pulse.service;
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,9 @@ public class PulseController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PulseController.class);
 	
-	Pulse lastPulse = new Pulse("Dev1",100);
+	Pulse lastPulse;
+	ArrayList<Pulse> prePulseList = new ArrayList<Pulse>();
+	ArrayList<Pulse> postPulseList = new ArrayList<Pulse>();
 	
 	@Autowired
 	private PulseService pulseService;
@@ -42,25 +46,57 @@ public class PulseController {
 	 */
 	@RequestMapping(value="/pulse", method = RequestMethod.GET)
 	public ResponseEntity<Double> getTest(){
-		//PACLookup pacLookup = pulseService.getPacInfo(pulse);
-		//LOGGER.debug("PACController.getPACInfo :: Pac request: Sending {}", pacLookup.toSend());
-		System.out.println("Sending last pulse value:");
-		return new ResponseEntity<Double>(lastPulse.getData(), HttpStatus.OK);
+		//System.out.println("Sending last pulse value:");
+		if(lastPulse!=null){
+			return new ResponseEntity<Double>(lastPulse.getData(), HttpStatus.OK);
+		}
+		else{
+			return new ResponseEntity<Double>((double) 80, HttpStatus.OK);
+		}
 	}
 	
 	@RequestMapping(value="/test", method = RequestMethod.GET)
 	public ResponseEntity<String> getPulse(){
-		//PACLookup pacLookup = pulseService.getPacInfo(pulse);
-		//LOGGER.debug("PACController.getPACInfo :: Pac request: Sending {}", pacLookup.toSend());
-		
 		return new ResponseEntity<String>("true", HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/pulse", method = RequestMethod.POST)
 	public ResponseEntity<String> storePulse(@RequestBody Pulse pulse){
 		this.lastPulse = pulse;
-		//PACLookup pacLookup = pulseService.getPacInfo(pulse);
-		//LOGGER.debug("PACController.getPACInfo :: Pac request: Sending {}", pacLookup.toSend());
+		
+		if(pulse.getPulsePrePost().equalsIgnoreCase("pre")){
+			if(pulse.getData() > 60 && pulse.getData() < 140){
+				prePulseList.add(pulse);
+			}
+			if(prePulseList.size() % 5 == 0){
+				double sum=0;
+				for(Pulse tempPulse : prePulseList){
+					sum += tempPulse.getData();
+				}
+				sum/=5;
+				pulse.setData(sum);
+				pulseService.storePulse(pulse);
+				System.out.println("\nPre Pulse Stored ::"+pulse.toString());
+				prePulseList.clear();
+			}
+		}
+		else{
+			if(pulse.getData() > 60 && pulse.getData() < 140){
+				postPulseList.add(pulse);
+			}
+			if(postPulseList.size() % 5 == 0){
+				double sum=0;
+				for(Pulse tempPulse : postPulseList){
+					sum += tempPulse.getData();
+				}
+				sum/=5;
+				pulse.setData(sum);
+				pulseService.storePulse(pulse);
+				System.out.println("\nPost Pulse Stored ::"+pulse.toString());
+				postPulseList.clear();
+			}
+		}
+		
 		System.out.println(pulse.toString());
 		return new ResponseEntity<String>("true", HttpStatus.OK);
 	}
