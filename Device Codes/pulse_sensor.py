@@ -3,14 +3,16 @@ import RPi.GPIO as GPIO
 import requests
 
 INPUT_PIN = 8
+INPUT_SWITCH = 40
 Out_3 = 3
 Out_5 = 5
 Out_7 = 7
-PULSE_REST_URL = 'http://inbanshetev:8091/delegate/'
+PULSE_REST_URL = 'http://INBANSHETEV:8091/delegate/'
 GPIO.setwarnings(False)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(INPUT_PIN,GPIO.IN)
+GPIO.setup(INPUT_SWITCH,GPIO.IN)
 GPIO.setup(Out_3, GPIO.OUT)
 GPIO.setup(Out_5, GPIO.OUT)
 GPIO.setup(Out_7, GPIO.OUT)
@@ -34,12 +36,16 @@ def inputLow(channel):
             print("Beats Per Min: ")
             #print(t2-t1)
             pulse = (interval*60)/(t2-t1)
+            if GPIO.input(INPUT_SWITCH):
+               pulsePrePost='pre'
+            else:
+               pulsePrePost='post' 
             pulse_data = {
-                            'device':'PULSE01',
-                            'data' : pulse
-                            
-                        }
-            
+                                'device':'PULSE01',
+                                'patientActivationCode':'1000067620',
+                                'pulsePrePost' : pulsePrePost,
+                                'data' : pulse
+                            }
             print(pulse_data)
             if pulse > 73.0 :
                 GPIO.output(Out_3,True)
